@@ -23,10 +23,13 @@
                       info:(NSDictionary *)info
                      block:(msgSendBlock)block;
 
+-(void)NetApi_ApplySendFileWithInfo:(NSDictionary *)info;
+
 -(NSString *)getIpWithUid:(uint32_t)uid;
 
 -(void)sendMvData:(NSData *)data toHost:(NSString *)host;
 -(void)sendAuData:(NSData *)data toHost:(NSString *)host;
+-(void)sendFileData:(NSData *)data uid:(int)uid;
 
 -(void)addTcpDelegate:(id)obj;
 -(void)removeTcpDelegate:(id)obj;

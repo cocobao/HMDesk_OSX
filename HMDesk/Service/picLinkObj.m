@@ -9,6 +9,8 @@
 #import "picLinkObj.h"
 #import "picNetComMethod.h"
 
+#define PRO_VERSION 1
+
 @interface picLinkObj ()<pssUdpLinkDelegate>
 @property (nonatomic, strong) picUdpLinkObj *udp_link;
 @property (nonatomic, strong) picTcpLinkObj *tcp_link;
@@ -69,23 +71,28 @@ __strong static id sharedInstance = nil;
     [_tcp_link removeDelegate:obj];
 }
 
--(pssHSMmsg *)packDataWithId:(int32_t)msgId uid:(uint)uid type:(NSInteger)type body:(NSDictionary *)body block:(msgSendBlock)block
+-(pssHSMmsg *)packDataWithId:(int32_t)msgId uid:(uint)uid type:(NSInteger)type body:(id)body block:(msgSendBlock)block
 {
-    NSData *jsonData = [utility dictionaryToData:body];
+    NSData *bodyData = nil;
+    if ([body isKindOfClass:[NSDictionary class]]) {
+        bodyData = [utility dictionaryToData:body];
+    }else if([body isKindOfClass:[NSData class]]){
+        bodyData = body;
+    }
     
-    NSMutableData *data = [[NSMutableData alloc] initWithLength:(jsonData.length + sizeof(stPssProtocolHead))];
+    NSMutableData *data = [[NSMutableData alloc] initWithLength:(bodyData.length + sizeof(stPssProtocolHead))];
     stPssProtocolHead *head = (stPssProtocolHead *)data.bytes;
     head->head[0] = HEADER_0;
     head->head[1] = HEADER_1;
     head->head[2] = HEADER_2;
     head->head[3] = HEADER_3;
-    head->version = 0x1;
+    head->version = PRO_VERSION;
     head->msgId = htonl(msgId);
     head->type = type;
     head->uid = uid;
-    head->bodyLength = htonl(jsonData.length);
-    if (jsonData.length > 0){
-        memcpy((void *)(data.bytes + sizeof(stPssProtocolHead)), jsonData.bytes, jsonData.length);
+    head->bodyLength = htonl(bodyData.length);
+    if (bodyData.length > 0){
+        memcpy((void *)(data.bytes + sizeof(stPssProtocolHead)), bodyData.bytes, bodyData.length);
     }
     pssHSMmsg *pack = [[pssHSMmsg alloc] initWithData:data uid:uid msgId:msgId block:block];
     return pack;
@@ -98,10 +105,27 @@ __strong static id sharedInstance = nil;
     protoHead->head[1] = HEADER_1;
     protoHead->head[2] = HEADER_2;
     protoHead->head[3] = HEADER_3;
-    protoHead->version = 0x1;
+    protoHead->version = PRO_VERSION;
     protoHead->msgId = 0;
     protoHead->type = type;
     protoHead->bodyLength = htonl((int)data.length - sizeof(stPssProtocolHead));
+}
+
+-(pssHSMmsg *)setProtocolHead:(NSData *)data type:(NSInteger)type uid:(int)uid
+{
+    stPssProtocolHead *protoHead = (stPssProtocolHead *)data.bytes;
+    protoHead->head[0] = HEADER_0;
+    protoHead->head[1] = HEADER_1;
+    protoHead->head[2] = HEADER_2;
+    protoHead->head[3] = HEADER_3;
+    protoHead->version = PRO_VERSION;
+    protoHead->msgId = 0;
+    protoHead->type = type;
+    protoHead->uid = uid;
+    protoHead->bodyLength = htonl((int)data.length - sizeof(stPssProtocolHead));
+    
+    pssHSMmsg *pack = [[pssHSMmsg alloc] initWithData:data uid:uid msgId:0 block:nil];
+    return pack;
 }
 
 //广播ip地址
@@ -159,13 +183,11 @@ __strong static id sharedInstance = nil;
 }
 
 //请求发送文件
--(void)NetApi_ApplySendFileWithUid:(NSInteger)uid
-                              info:(NSDictionary *)info
-                             block:(msgSendBlock)block
+-(void)NetApi_ApplySendFileWithInfo:(NSDictionary *)info
 {
     uint32_t msgId = [pssHSMmsg getRandomMessageID];
-    pssHSMmsg *newpack = [self packDataWithId:msgId uid:(uint)uid type:emPssProtocolType_ApplySendFile body:info block:block];
-    [_tcp_link sendPack:newpack];
+    pssHSMmsg *newpack = [self packDataWithId:msgId uid:0 type:emPssProtocolType_ApplySendFile body:info block:nil];
+    [_tcp_link broadcastPack:newpack];
 }
 
 //发送视频数据
@@ -180,6 +202,13 @@ __strong static id sharedInstance = nil;
 {
     [self setProtocolHead:data type:emPssProtocolType_AudioData];
     [_udp_link sendData:data toHost:host];
+}
+
+//发送文件数据
+-(void)sendFileData:(NSData *)data uid:(int)uid
+{
+    pssHSMmsg *newpack = [self setProtocolHead:data type:emPssProtocolType_SendFile uid:uid];
+    [_tcp_link sendPack:newpack];
 }
 
 -(NSString *)getIpWithUid:(uint32_t)uid

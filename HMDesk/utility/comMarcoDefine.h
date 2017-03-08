@@ -41,5 +41,8 @@
 #define ptl_sampleFmt @"sampleFmt"
 #define ptl_sampleRate @"sampleRate"
 #define ptl_channels @"channels"
+#define ptl_fileName @"fileName"
+#define ptl_fileSize @"fileSize"
+#define ptl_filePath @"filePath"
 
 #endif /* comMarcoDefine_h */

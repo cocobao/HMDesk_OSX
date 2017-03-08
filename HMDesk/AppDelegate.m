@@ -22,15 +22,13 @@
 @property (nonatomic, weak) IBOutlet NSButton *selectFileBtn;
 @property (nonatomic, weak) IBOutlet NSTextField *selectFilePath;
 @property (nonatomic, weak) IBOutlet NSButton *sendSelectFileBtn;
+@property (nonatomic, weak) IBOutlet NSButton *showInFinder_rootPath;
+@property (nonatomic, weak) IBOutlet NSButton *showInFinder_selectFile;
 @end
 
 @implementation AppDelegate
 
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification {
-    // Insert code here to initialize your application
-    
-    _ipLabel.stringValue = [picNetComMethod localIPAdress];
-    
     [_broadcastBtn setTarget:self];
     [_broadcastBtn setAction:@selector(broadcastAction:)];
     
@@ -46,6 +44,15 @@
     [_selectFileBtn setTarget:self];
     [_selectFileBtn setAction:@selector(selectFileAction:)];
     
+    _showInFinder_rootPath.tag = 1;
+    [_showInFinder_rootPath setTarget:self];
+    [_showInFinder_rootPath setAction:@selector(showInFinder:)];
+    
+    _showInFinder_selectFile.tag = 2;
+    [_showInFinder_selectFile setTarget:self];
+    [_showInFinder_selectFile setAction:@selector(showInFinder:)];
+    
+    _ipLabel.stringValue = [picNetComMethod localIPAdress];
     
     [picLink addTcpDelegate:self];
     [self readRootPath];
@@ -55,16 +62,36 @@
     // Insert code here to tear down your application
 }
 
+-(void)showInFinder:(NSButton *)sender
+{
+    NSString *path = nil;
+    if (sender.tag == 1) {
+        path = [_rootPath stringValue];
+    }else{
+        path = [_selectFilePath stringValue];
+    }
+    if (!path) {
+        return;
+    }
+    [[NSWorkspace sharedWorkspace] selectFile:path inFileViewerRootedAtPath:path];
+}
+
 -(void)openFile:(NSButton *)sender
 {
     NSString *path = [_selectFilePath stringValue];
     if(path.length == 0)
         return;
-
+    
     //读取文件属性
+    NSDictionary *info = [UPan_FileMng fileAttriutes:path];
+    NSString *fileName = [UPan_FileMng fileNameByPath:path];
+    NSDictionary *fileInfo = @{
+                               ptl_fileName:fileName,
+                               ptl_fileSize:info[NSFileSize],
+                               ptl_filePath:path,
+                               };
     
-    NSData *data = [UPan_FileMng readFile:path];
-    
+    [picLink NetApi_ApplySendFileWithInfo:fileInfo];
 }
 
 //广播自己ip地址
@@ -151,11 +178,7 @@
     
     stPssProtocolHead *head = (stPssProtocolHead *)receData.sendData.bytes;
     
-    if (head->type == emPssProtocolType_OpenFile) {
-        
-    }else if (head->type == emPssProtocolType_CloseMv){
-        
-    }else if (head->type == emPssProtocolType_OpenDir){
+    if (head->type == emPssProtocolType_ApplySendFile) {
         
     }
 }

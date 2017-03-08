@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		8498A45F1E6EF8AA0032F12C /* UPan_FileMng.m in Sources */ = {isa = PBXBuildFile; fileRef = 8498A45E1E6EF8AA0032F12C /* UPan_FileMng.m */; };
+		84CB87851E6FD83000DCE909 /* picFileSender.m in Sources */ = {isa = PBXBuildFile; fileRef = 84CB87841E6FD83000DCE909 /* picFileSender.m */; };
+		84CB87921E6FF09D00DCE909 /* picFileSendrMgr.m in Sources */ = {isa = PBXBuildFile; fileRef = 84CB87911E6FF09D00DCE909 /* picFileSendrMgr.m */; };
 		84F798BB1E6EB15000CF871A /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 84F798BA1E6EB15000CF871A /* AppDelegate.m */; };
 		84F798BE1E6EB15000CF871A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 84F798BD1E6EB15000CF871A /* main.m */; };
 		84F798C01E6EB15000CF871A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 84F798BF1E6EB15000CF871A /* Assets.xcassets */; };
@@ -38,6 +40,10 @@
 /* Begin PBXFileReference section */
 		8498A45D1E6EF8AA0032F12C /* UPan_FileMng.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UPan_FileMng.h; sourceTree = "<group>"; };
 		8498A45E1E6EF8AA0032F12C /* UPan_FileMng.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UPan_FileMng.m; sourceTree = "<group>"; };
+		84CB87831E6FD83000DCE909 /* picFileSender.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = picFileSender.h; sourceTree = "<group>"; };
+		84CB87841E6FD83000DCE909 /* picFileSender.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = picFileSender.m; sourceTree = "<group>"; };
+		84CB87901E6FF09D00DCE909 /* picFileSendrMgr.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = picFileSendrMgr.h; sourceTree = "<group>"; };
+		84CB87911E6FF09D00DCE909 /* picFileSendrMgr.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = picFileSendrMgr.m; sourceTree = "<group>"; };
 		84F798B61E6EB15000CF871A /* HMDesk.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HMDesk.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		84F798B91E6EB15000CF871A /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		84F798BA1E6EB15000CF871A /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -456,8 +462,8 @@
 				8498A45D1E6EF8AA0032F12C /* UPan_FileMng.h */,
 				8498A45E1E6EF8AA0032F12C /* UPan_FileMng.m */,
 				84F799561E6EB37100CF871A /* comMarcoDefine.h */,
-				84F799571E6EB37100CF871A /* PrefixHeader.pch */,
 				84F799581E6EB37100CF871A /* utility.h */,
+				84F799571E6EB37100CF871A /* PrefixHeader.pch */,
 				84F799591E6EB37100CF871A /* utility.m */,
 			);
 			path = utility;
@@ -478,6 +484,10 @@
 				84F799651E6EB37F00CF871A /* picUdpLinkObj.m */,
 				84F799661E6EB37F00CF871A /* pssProtocolType.h */,
 				84F799671E6EB37F00CF871A /* pssProtocolType.m */,
+				84CB87831E6FD83000DCE909 /* picFileSender.h */,
+				84CB87841E6FD83000DCE909 /* picFileSender.m */,
+				84CB87901E6FF09D00DCE909 /* picFileSendrMgr.h */,
+				84CB87911E6FF09D00DCE909 /* picFileSendrMgr.m */,
 			);
 			path = Service;
 			sourceTree = "<group>";
@@ -559,11 +569,13 @@
 			files = (
 				84F7995A1E6EB37100CF871A /* utility.m in Sources */,
 				8498A45F1E6EF8AA0032F12C /* UPan_FileMng.m in Sources */,
+				84CB87921E6FF09D00DCE909 /* picFileSendrMgr.m in Sources */,
 				84F7996C1E6EB37F00CF871A /* picUdpLinkObj.m in Sources */,
 				84F7996D1E6EB37F00CF871A /* pssProtocolType.m in Sources */,
 				84F799481E6EB34C00CF871A /* GCDAsyncUdpSocket.m in Sources */,
 				84F7996B1E6EB37F00CF871A /* picTcpLinkObj.m in Sources */,
 				84F799491E6EB34C00CF871A /* README.markdown in Sources */,
+				84CB87851E6FD83000DCE909 /* picFileSender.m in Sources */,
 				84F799471E6EB34C00CF871A /* GCDAsyncSocket.m in Sources */,
 				84F7994A1E6EB34C00CF871A /* AsyncSocket.m in Sources */,
 				84F798BE1E6EB15000CF871A /* main.m in Sources */,
@@ -692,6 +704,7 @@
 				MACOSX_DEPLOYMENT_TARGET = 10.8;
 				PRODUCT_BUNDLE_IDENTIFIER = ybz.self.HMDesk;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				USER_HEADER_SEARCH_PATHS = "$(PROJECT_DIR)/HMDesk/3partyLib/ffmpeg/include";
 			};
 			name = Debug;
 		};
@@ -711,6 +724,7 @@
 				MACOSX_DEPLOYMENT_TARGET = 10.8;
 				PRODUCT_BUNDLE_IDENTIFIER = ybz.self.HMDesk;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				USER_HEADER_SEARCH_PATHS = "$(PROJECT_DIR)/HMDesk/3partyLib/ffmpeg/include";
 			};
 			name = Release;
 		};

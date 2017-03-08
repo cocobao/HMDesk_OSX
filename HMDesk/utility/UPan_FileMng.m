@@ -33,6 +33,7 @@
     return NSTemporaryDirectory();
 }
 
+//获取目录下的内容
 +(NSArray *)ContentOfPath:(NSString *)path
 {
     path = [path stringByStandardizingPath];
@@ -102,5 +103,15 @@
 +(void)writeFile:(NSString *)path data:(NSData *)data
 {
     [data writeToFile:path atomically:YES];
+}
+
+//根据路径提取文件名称
++(NSString *)fileNameByPath:(NSString *)path
+{
+    if (!path) {
+        return nil;
+    }
+    NSFileManager *fileManager = [NSFileManager defaultManager];
+    return [fileManager displayNameAtPath:path];
 }
 @end

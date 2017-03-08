@@ -45,4 +45,7 @@
 
 //写数据到文件
 +(void)writeFile:(NSString *)path data:(NSData *)data;
+
+//根据路径提取文件名称
++(NSString *)fileNameByPath:(NSString *)path;
 @end
