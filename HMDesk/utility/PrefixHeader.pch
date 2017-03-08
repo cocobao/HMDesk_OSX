@@ -1,0 +1,20 @@
+//
+//  PrefixHeader.pch
+//  picSimpleSendDeskServer
+//
+//  Created by admin on 2017/1/19.
+//  Copyright © 2017年 ybz. All rights reserved.
+//
+
+#ifndef PrefixHeader_pch
+#define PrefixHeader_pch
+
+#define WeakSelf(weakSelf)  __weak __typeof(&*self)weakSelf = self
+#define StrongSelf(strongSelf, s) __strong __typeof(&*s) strongSelf = s
+
+#import "comMarcoDefine.h"
+#import "utility.h"
+#import "picNetComMethod.h"
+#import "UPan_FileMng.h"
+
+#endif /* PrefixHeader_pch */
