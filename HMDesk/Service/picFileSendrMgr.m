@@ -9,7 +9,7 @@
 #import "picFileSendrMgr.h"
 #import "picFileSender.h"
 
-@interface picFileSendrMgr ()
+@interface picFileSendrMgr ()<picFileSenderDelegate>
 @property (nonatomic, strong) NSMutableDictionary *dictSenders;
 @end
 
@@ -40,16 +40,48 @@ __strong static id sharedInstance = nil;
     return self;
 }
 
--(NSMutableDictionary *)dictSenders
+-(instancetype)init
 {
-    if (!_dictSenders) {
+    if (self = [super init]) {
         _dictSenders = [NSMutableDictionary dictionaryWithCapacity:10];
+        [[NSNotificationCenter defaultCenter] addObserver:self
+                                                 selector:@selector(clientDisconnect:)
+                                                     name:kNotificationClientDisconnect
+                                                   object:nil];
     }
-    return _dictSenders;
+    return self;
 }
 
--(void)addSendingFile:(NSString *)filePath
+-(void)clientDisconnect:(NSNotification *)notify
 {
+    NSDictionary *dict = notify.object;
+    NSInteger uid = [dict[ptl_uid] integerValue];
+    NSArray *arrAllKeys = [self.dictSenders allKeys];
+    for (NSString *key in arrAllKeys) {
+        picFileSender *fs = self.dictSenders[key];
+        if (fs.mUid == uid) {
+            [fs cancel];
+            [self.dictSenders removeObjectForKey:key];
+            break;
+        }
+    }
+}
+
+-(void)addSendingUid:(NSInteger)uid filePath:(NSString *)filePath fileId:(NSInteger)fileId
+{
+    picFileSender *fs = [[picFileSender alloc] initWithUid:uid filePath:filePath fileId:fileId];
+    self.dictSenders[fs.threadName] = fs;
     
+    NSLog(@"add file sending:%@", filePath);
+}
+
+-(void)didSendFinish:(NSString *)threadName
+{
+    if (self.dictSenders[threadName]) {
+        picFileSender *fs = self.dictSenders[threadName];
+        [self.dictSenders removeObjectForKey:threadName];
+        
+        [fs cancel];
+    }
 }
 @end

@@ -109,9 +109,13 @@ __strong static id sharedInstance = nil;
         if (client.mSocket.socketFD <= 0) {
             [client.mSocket disconnect];
             [_arrClientSockets removeObjectAtIndex:i];
+            
+            NSLog(@"did disconnect, ClientSocket count:%zd", _arrClientSockets.count);
+            
+            NSNotificationCenter *nofity = [NSNotificationCenter defaultCenter];
+            [nofity postNotificationName:kNotificationClientDisconnect object:@{ptl_uid:@(client.uid)}];
         }
     }
-    NSLog(@"did disconnect, ClientSocket count:%zd", _arrClientSockets.count);
 }
 
 //接收数据
@@ -131,10 +135,7 @@ __strong static id sharedInstance = nil;
     }
     
     [client.mRecvDataBuf appendData:data];
-    
-    WeakSelf(weakSelf);
-    
-    [weakSelf didReadDataPack:client];
+    [self didReadDataPack:client];
     [sock readDataWithTimeout:-1 tag:0];
 }
 

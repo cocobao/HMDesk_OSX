@@ -13,7 +13,6 @@ static const NSInteger MaxReadSize = (1024*1024);
 
 @interface picFileSender ()
 @property (nonatomic, copy) NSString *filePath;
-@property (nonatomic, assign) NSInteger mUid;
 @property (nonatomic, assign) NSInteger persent;
 @property (nonatomic, assign) NSInteger mFileId;
 @property (nonatomic, strong) NSThread *mThread;
@@ -67,9 +66,16 @@ static const NSInteger MaxReadSize = (1024*1024);
             break;
         }
         offset += data.length;
-        NSData *reData = [self resetForSendData:data fid:(int)fileSender.mUid];
+        NSData *reData = [self resetForSendData:data fid:fileSender.mFileId];
         [picLink sendFileData:reData uid:(uint32_t)fileSender.mUid];
-        usleep(20000);
+//        NSLog(@"send data size:%zd", reData.length);
+        usleep(50000);
+    }
+    
+    [fileHandle closeFile];
+    
+    if (self.m_delegate && [self.m_delegate respondsToSelector:@selector(didSendFinish:)]) {
+        [self.m_delegate didSendFinish:fileSender.threadName];
     }
 }
 
@@ -89,13 +95,15 @@ static const NSInteger MaxReadSize = (1024*1024);
     return [handle readDataOfLength:readSize];
 }
 
--(NSData *)resetForSendData:(NSData *)pSrc fid:(int)fid
+-(NSData *)resetForSendData:(NSData *)pSrc fid:(unsigned long long)fid
 {
-    NSInteger headerSize = sizeof(stPssProtocolHead);
-    NSMutableData *muData = [[NSMutableData alloc] initWithLength:(headerSize+pSrc.length+sizeof(int))];
+    int sizeSpace = sizeof(unsigned long long);
+    int headerSize = sizeof(stPssProtocolHead);
+    NSMutableData *muData = [[NSMutableData alloc] initWithLength:(headerSize+pSrc.length+sizeSpace)];
+    
     uint8_t *pDes = (uint8_t *)[muData bytes];
-    memcpy(pDes+headerSize+sizeof(NSInteger), [pSrc bytes], pSrc.length);
-    memcpy(pDes+headerSize, &fid, sizeof(int));
+    memcpy(pDes+headerSize, &fid, sizeof(fid));
+    memcpy(pDes+headerSize+sizeSpace, [pSrc bytes], pSrc.length);
     return muData;
 }
 @end

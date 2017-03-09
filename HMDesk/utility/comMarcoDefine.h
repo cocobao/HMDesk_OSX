@@ -11,6 +11,8 @@
 
 #define ptl_rootPath @"rootPath"
 
+#define kNotificationClientDisconnect @"kNotificationClientDisconnect"
+
 #define ptl_key @"key"
 #define ptl_ofo @"ofo"
 #define ptl_ofoadd @"ofoadd"
@@ -44,5 +46,6 @@
 #define ptl_fileName @"fileName"
 #define ptl_fileSize @"fileSize"
 #define ptl_filePath @"filePath"
+#define ptl_fileId @"fileId"
 
 #endif /* comMarcoDefine_h */

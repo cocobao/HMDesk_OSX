@@ -8,6 +8,9 @@
 
 #import <Foundation/Foundation.h>
 
-@interface picFileSendrMgr : NSObject
+#define FileSendrMgr [picFileSendrMgr shareInstance]
 
+@interface picFileSendrMgr : NSObject
++ (id)shareInstance;
+-(void)addSendingUid:(NSInteger)uid filePath:(NSString *)filePath fileId:(NSInteger)fileId;
 @end
