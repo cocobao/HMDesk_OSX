@@ -70,8 +70,11 @@ __strong static id sharedInstance = nil;
 -(void)addSendingUid:(NSInteger)uid filePath:(NSString *)filePath fileId:(NSInteger)fileId
 {
     picFileSender *fs = [[picFileSender alloc] initWithUid:uid filePath:filePath fileId:fileId];
+    if(self.dictSenders[fs.threadName]){
+        return;
+    }
     self.dictSenders[fs.threadName] = fs;
-    
+    fs.m_delegate = self;
     NSLog(@"add file sending:%@", filePath);
 }
 

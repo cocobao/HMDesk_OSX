@@ -28,7 +28,7 @@ static const NSInteger MaxReadSize = (1024*1024);
         _mUid = uid;
         _mFileId = fileId;
         
-        NSString *threadName = [NSString stringWithFormat:@"mvThread_%zd", uid];
+        NSString *threadName = [NSString stringWithFormat:@"mvThread_%zd_%zd", uid, fileId];
         NSThread *thread = [[NSThread alloc] initWithTarget:self selector:@selector(mvThread:) object:self];
         [thread setName:threadName];
         [thread start];
