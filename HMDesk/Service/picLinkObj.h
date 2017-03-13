@@ -24,6 +24,9 @@
                      block:(msgSendBlock)block;
 
 -(void)NetApi_ApplySendFileWithInfo:(NSDictionary *)info;
+-(void)NetApi_ApplyRecvFileAckWithUid:(NSInteger)uid msgId:(uint32_t)msgId fileId:(NSInteger)fileId;
+//失败返回
+-(void)NetApi_FailAckWithUid:(NSInteger)uid msgId:(uint32_t)msgId type:(NSInteger)type errCode:(NSInteger)errCode msg:(NSString *)msg;
 
 -(NSString *)getIpWithUid:(uint32_t)uid;
 

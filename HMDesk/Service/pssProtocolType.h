@@ -27,7 +27,9 @@ typedef enum {
     emPssProtocolType_VideoInfo,
     emPssProtocolType_ApplySendFile,
     emPssProtocolType_SendFile,
-    emPssProtocolType_VideoData = 100,
+    emPssProtocolType_ApplyRecvFile,
+    emPssProtocolType_RecvFile,
+    emPssProtocolType_VideoData,
     emPssProtocolType_AudioData,
 }emPssProtocolType;
 

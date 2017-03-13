@@ -9,10 +9,16 @@
 #ifndef comMarcoDefine_h
 #define comMarcoDefine_h
 
-#define ptl_rootPath @"rootPath"
+
 
 #define kNotificationClientDisconnect @"kNotificationClientDisconnect"
+#define kNotificationFileRecvPersent @"kNotificationFileRecvPersent"
 
+#define _SUCCESS_CODE 200
+
+#define PSS_CMD_TYPE @"PSS_CMD_TYPE"
+
+#define ptl_rootPath @"rootPath"
 #define ptl_key @"key"
 #define ptl_ofo @"ofo"
 #define ptl_ofoadd @"ofoadd"
@@ -25,11 +31,6 @@
 #define ptl_bid @"bid"
 #define ptl_wx_name @"wx_name"
 #define ptl_wx_pwd @"wx_pwd"
-
-#define _SUCCESS_CODE 200
-
-#define PSS_CMD_TYPE @"PSS_CMD_TYPE"
-
 #define ptl_dirs @"dirs"
 #define ptl_files @"files"
 #define ptl_file @"file"
@@ -47,5 +48,10 @@
 #define ptl_fileSize @"fileSize"
 #define ptl_filePath @"filePath"
 #define ptl_fileId @"fileId"
+#define ptl_persent @"persent"
+#define ptl_seek @"seek"
+#define ptl_msg @"msg"
+
+#define Color_black(x)   [NSColor colorWithRed:0 green:0 blue:0  alpha:0.01f*x]
 
 #endif /* comMarcoDefine_h */

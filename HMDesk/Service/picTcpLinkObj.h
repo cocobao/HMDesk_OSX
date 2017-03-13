@@ -15,6 +15,7 @@
 @protocol NetTcpCallback
 @optional
 - (void)NetTcpCallback:(pssHSMmsg *)receData error:(NSError *)error;
+- (void)NetRecvFileUid:(NSInteger)uid fileId:(unsigned long long)fileId Data:(NSData *)data;
 @end
 
 @interface picClient : NSObject

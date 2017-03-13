@@ -74,10 +74,6 @@
 //创建文件
 +(void)createFile:(NSString *)path
 {
-    if ([[NSFileManager defaultManager] fileExistsAtPath:path]){
-        [UPan_FileMng deleteFile:path];
-    }
-    
     NSFileManager *fileManager = [NSFileManager defaultManager];
     [fileManager createFileAtPath:path contents:nil attributes:nil];
 }

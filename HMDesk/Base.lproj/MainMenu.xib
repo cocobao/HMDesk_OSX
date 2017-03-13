@@ -19,8 +19,6 @@
                 <outlet property="broadcastBtn" destination="SSw-4L-Pcj" id="jGi-CS-NdD"/>
                 <outlet property="ipLabel" destination="wHU-LC-vqQ" id="6ku-gr-3Rq"/>
                 <outlet property="rootPath" destination="6TX-An-sYt" id="Q9V-Ts-xZk"/>
-                <outlet property="rootPathBtn" destination="FFD-aW-8b0" id="TAr-A2-3ph"/>
-                <outlet property="saveRootPathBtn" destination="YVe-3o-bjy" id="UAg-2T-Fml"/>
                 <outlet property="selectFileBtn" destination="j7e-IZ-5L1" id="dA9-jw-Gx5"/>
                 <outlet property="selectFilePath" destination="eRB-aa-JUJ" id="ZNX-xe-6dl"/>
                 <outlet property="sendSelectFileBtn" destination="tp8-QM-Iil" id="3YO-BH-gkd"/>
@@ -736,14 +734,6 @@
                             </subviews>
                         </view>
                     </box>
-                    <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="YVe-3o-bjy">
-                        <rect key="frame" x="153" y="137" width="104" height="32"/>
-                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                        <buttonCell key="cell" type="push" title="保存" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="7KI-O0-igP">
-                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                            <font key="font" size="13" name=".PingFangSC-Regular"/>
-                        </buttonCell>
-                    </button>
                     <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="j7e-IZ-5L1">
                         <rect key="frame" x="372" y="70" width="94" height="32"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
@@ -779,18 +769,10 @@
                             <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                         </textFieldCell>
                     </textField>
-                    <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="FFD-aW-8b0">
-                        <rect key="frame" x="372" y="166" width="94" height="32"/>
-                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                        <buttonCell key="cell" type="push" title="选择路径" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="O2s-Pv-DKa">
-                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                            <font key="font" size="13" name=".PingFangSC-Regular"/>
-                        </buttonCell>
-                    </button>
                     <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="cy7-kq-frQ">
                         <rect key="frame" x="18" y="203" width="160" height="17"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                        <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="设置路径保存接收到的文件" id="2Pc-Uw-O3t">
+                        <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="接收到的文件路径" id="2Pc-Uw-O3t">
                             <font key="font" size="13" name=".PingFangSC-Regular"/>
                             <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                             <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>

@@ -8,15 +8,15 @@
 
 #import "AppDelegate.h"
 #import "picLinkObj.h"
-#import "picFileSendrMgr.h"
+#import "picFileExchangeMgr.h"
 
 @interface AppDelegate ()
 @property (weak) IBOutlet NSWindow *window;
 @property (nonatomic, weak) IBOutlet NSButton *broadcastBtn;
 @property (nonatomic, weak) IBOutlet NSTextField *ipLabel;
-@property (nonatomic, weak) IBOutlet NSButton *rootPathBtn;
+//@property (nonatomic, weak) IBOutlet NSButton *rootPathBtn;
 @property (nonatomic, weak) IBOutlet NSTextField *rootPath;
-@property (nonatomic, weak) IBOutlet NSButton *saveRootPathBtn;
+//@property (nonatomic, weak) IBOutlet NSButton *saveRootPathBtn;
 @property (nonatomic, weak) IBOutlet NSButton *selectFileBtn;
 @property (nonatomic, weak) IBOutlet NSTextField *selectFilePath;
 @property (nonatomic, weak) IBOutlet NSButton *sendSelectFileBtn;
@@ -30,11 +30,11 @@
     [_broadcastBtn setTarget:self];
     [_broadcastBtn setAction:@selector(broadcastAction:)];
     
-    [_rootPathBtn setTarget:self];
-    [_rootPathBtn setAction:@selector(setRootPathAction:)];
-    
-    [_saveRootPathBtn setTarget:self];
-    [_saveRootPathBtn setAction:@selector(saveRootPath:)];
+//    [_rootPathBtn setTarget:self];
+//    [_rootPathBtn setAction:@selector(setRootPathAction:)];
+
+//    [_saveRootPathBtn setTarget:self];
+//    [_saveRootPathBtn setAction:@selector(saveRootPath:)];
     
     [_sendSelectFileBtn setTarget:self];
     [_sendSelectFileBtn setAction:@selector(openFile:)];
@@ -53,7 +53,12 @@
     _ipLabel.stringValue = [picNetComMethod localIPAdress];
     
     [picLink addTcpDelegate:self];
-    [self readRootPath];
+//    [self readRootPath];
+    _rootPath.editable = NO;
+    _rootPath.backgroundColor = Color_black(10);
+    NSString *path = @"/Users/admin/Downloads";
+    [_rootPath setStringValue:path];
+    [FileExcgMgr setMNowPath:path];
 }
 
 - (void)applicationWillTerminate:(NSNotification *)aNotification {
@@ -107,6 +112,8 @@
     NSUserDefaults *ud = [NSUserDefaults standardUserDefaults];
     [ud setValue:str forKey:ptl_rootPath];
     [ud synchronize];
+    
+    [FileExcgMgr setMNowPath:str];
 }
 
 -(void)readRootPath
@@ -115,6 +122,7 @@
     id p = [ud objectForKey:ptl_rootPath];
     if (p) {
         [_rootPath setStringValue:p];
+        [FileExcgMgr setMNowPath:p];
     }
 }
 
@@ -183,7 +191,7 @@
         }
         NSString *filePath = receData.body[ptl_filePath];
         NSInteger fileId = [receData.body[ptl_fileId] integerValue];
-        [FileSendrMgr addSendingUid:head->uid filePath:filePath fileId:fileId];
+        [FileExcgMgr addSendingUid:head->uid filePath:filePath fileId:fileId];
     }
 }
 @end

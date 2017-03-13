@@ -241,6 +241,7 @@ __strong static id sharedInstance = nil;
 -(void)packHandler:(picClient *)client data:(pssHSMmsg *)msg
 {
     stPssProtocolHead *head = (stPssProtocolHead *)msg.sendData.bytes;
+    char *body = (char *)(msg.sendData.bytes + sizeof(stPssProtocolHead));
     
     if (head->type == emPssProtocolType_Login) {
         client.isAuth = YES;
@@ -249,10 +250,19 @@ __strong static id sharedInstance = nil;
         if (!client.isAuth) {
             return;
         }
+        
+        if (head->type == emPssProtocolType_RecvFile){
+            int sizeSpace = sizeof(unsigned long long);
+            NSData *fileData = [NSData dataWithBytes:body+sizeSpace length:(msg.sendData.length - sizeof(stPssProtocolHead)-sizeSpace)];
+            unsigned long long fileId = 0;
+            memcpy(&fileId, body, sizeSpace);
+            [_multicastDelegate NetRecvFileUid:client.uid fileId:fileId Data:fileData];
+            return;
+        }
     }
+
     NSDictionary *dict = nil;
     if (head->bodyLength > 0) {
-        char *body = (char *)(msg.sendData.bytes + sizeof(stPssProtocolHead));
         NSData *jsonData = [[NSData alloc] initWithBytes:body length:head->bodyLength];
         dict = [utility jsonObjectWithJsonData:jsonData];
     }

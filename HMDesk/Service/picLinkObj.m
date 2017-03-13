@@ -190,6 +190,22 @@ __strong static id sharedInstance = nil;
     [_tcp_link broadcastPack:newpack];
 }
 
+//请求接收文件ack
+-(void)NetApi_ApplyRecvFileAckWithUid:(NSInteger)uid msgId:(uint32_t)msgId fileId:(NSInteger)fileId
+{
+    NSDictionary *dict = @{ptl_fileId:@(fileId), ptl_status:@(200)};
+    pssHSMmsg *newpack = [self packDataWithId:msgId uid:(uint)uid type:emPssProtocolType_ApplyRecvFile body:dict block:nil];
+    [_tcp_link sendPack:newpack];
+}
+
+//失败返回
+-(void)NetApi_FailAckWithUid:(NSInteger)uid msgId:(uint32_t)msgId type:(NSInteger)type errCode:(NSInteger)errCode msg:(NSString *)msg
+{
+    NSDictionary *dict = @{ptl_status:@(errCode), ptl_msg:msg};
+    pssHSMmsg *newPack = [self packDataWithId:msgId uid:(uint)uid type:type body:dict block:nil];
+    [_tcp_link sendPack:newPack];
+}
+
 //发送视频数据
 -(void)sendMvData:(NSData *)data toHost:(NSString *)host
 {
@@ -211,11 +227,13 @@ __strong static id sharedInstance = nil;
     [_tcp_link sendPack:newpack];
 }
 
+//获取客户端ip
 -(NSString *)getIpWithUid:(uint32_t)uid
 {
     return [_tcp_link getIpWithUid:uid];
 }
 
+//接收到广播ip消息回应
 -(void)recvBoatcastWithIp:(NSString *)ip
 {
     NSDictionary *dic = @{@"hello":@(200)};
