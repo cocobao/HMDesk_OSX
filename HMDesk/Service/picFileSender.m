@@ -9,7 +9,7 @@
 #import "picFileSender.h"
 #import "picLinkObj.h"
 
-static const NSInteger MaxReadSize = (1024*1024);
+static const NSInteger MaxReadSize = (1024*512);
 
 @interface picFileSender ()
 @property (nonatomic, copy) NSString *filePath;
@@ -69,7 +69,7 @@ static const NSInteger MaxReadSize = (1024*1024);
         NSData *reData = [self resetForSendData:data fid:fileSender.mFileId];
         [picLink sendFileData:reData uid:(uint32_t)fileSender.mUid];
 //        NSLog(@"send data size:%zd", reData.length);
-        usleep(50000);
+        usleep(80000);
     }
     
     [fileHandle closeFile];

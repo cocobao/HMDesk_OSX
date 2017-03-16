@@ -19,6 +19,10 @@
 @end
 
 @interface picClient : NSObject
+{
+    uint8_t *pSrc;
+    uint8_t *pSeek;
+}
 @property (nonatomic, strong) GCDAsyncSocket *mSocket;
 @property (nonatomic, copy) NSString *addrString;
 @property (nonatomic, assign) uint16_t port;
@@ -26,6 +30,8 @@
 @property (nonatomic, assign) BOOL isAuth;
 @property (nonatomic, strong) NSMutableArray *mArrRecvPack;
 @property (nonatomic, strong) NSMutableData *mRecvDataBuf;
+-(void)sortPack;
+-(void)addDataToBuf:(NSData *)data;
 @end
 
 @interface picTcpLinkObj : NSObject

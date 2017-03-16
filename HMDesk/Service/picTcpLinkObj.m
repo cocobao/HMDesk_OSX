@@ -12,6 +12,79 @@
 #import "GCDMulticastDelegate.h"
 
 @implementation picClient
+-(instancetype)init
+{
+    self = [super init];
+    if (self) {
+        _mRecvDataBuf = [[NSMutableData alloc] initWithLength:(1024*1024*10)];
+        _mArrRecvPack = [NSMutableArray arrayWithCapacity:10];
+        
+        pSrc = (uint8_t *)_mRecvDataBuf.bytes;
+        pSeek = pSrc;
+    }
+    return self;
+}
+
+-(void)addDataToBuf:(NSData *)data
+{
+    memcpy(pSeek, data.bytes, data.length);
+    pSeek += data.length;
+}
+
+-(NSInteger)lastDataCount
+{
+    return (pSeek - pSrc);
+}
+
+-(void)sortPack
+{
+    NSInteger lastLen = [self lastDataCount];
+    do {
+        if (lastLen < sizeof(stPssProtocolHead)) {
+            return;
+        }
+        
+        stPssProtocolHead *head = (stPssProtocolHead *)pSrc;
+        if (head->head[0] != HEADER_0 ||
+            head->head[1] != HEADER_1 ||
+            head->head[2] != HEADER_2 ||
+            head->head[3] != HEADER_3 ) {
+            //脏数据
+            memmove(pSrc, pSrc+1, lastLen-1);
+            continue;
+        }
+        
+        int msgLen = ntohl(head->bodyLength);
+        if (msgLen < 0 || msgLen > 10*1024*1024) {
+            //脏数据
+            pSeek = pSrc;
+            break;
+        }
+        
+        int packLen = msgLen + sizeof(stPssProtocolHead);
+        if (lastLen < packLen) {
+            //数据包不完整
+            break;
+        }
+        
+        NSData *pack = [[NSData alloc] initWithBytes:pSrc length:packLen];
+        lastLen = lastLen-packLen;
+        if (lastLen > 0) {
+            memmove(pSrc, pSrc+packLen, lastLen);
+            pSeek = pSrc + lastLen;
+        }else{
+            pSeek = pSrc;
+        }
+        
+        head = (stPssProtocolHead *)pack.bytes;
+        head->bodyLength = msgLen;
+        head->msgId = ntohl(head->msgId);
+        head->uid = _uid;
+        
+        pssHSMmsg *msg = [[pssHSMmsg alloc] initWithData:pack uid:head->uid msgId:head->msgId block:nil];
+        [_mArrRecvPack addObject:msg];
+    } while (lastLen > 0);
+}
 @end
 
 @interface picTcpLinkObj ()<GCDAsyncSocketDelegate>
@@ -94,8 +167,6 @@ __strong static id sharedInstance = nil;
     client.addrString = addrString;
     client.port = port;
     client.uid = [pssHSMmsg getRandomMessageID];//分配一个uid
-    client.mRecvDataBuf = [[NSMutableData alloc] initWithCapacity:1024];
-    client.mArrRecvPack = [NSMutableArray arrayWithCapacity:10];
     [_arrClientSockets addObject:client];
 
     return _mSocketQueue;
@@ -134,7 +205,7 @@ __strong static id sharedInstance = nil;
         return;
     }
     
-    [client.mRecvDataBuf appendData:data];
+    [client addDataToBuf:data];
     [self didReadDataPack:client];
     [sock readDataWithTimeout:-1 tag:0];
 }
@@ -178,53 +249,7 @@ __strong static id sharedInstance = nil;
 //处理接收数据分包
 -(void)didReadDataPack:(picClient *)client
 {
-    NSMutableData *recvDataBuf = client.mRecvDataBuf;
-    do {
-        if (recvDataBuf.length < sizeof(stPssProtocolHead)) {
-            break;
-        }
-        
-        stPssProtocolHead *head = (stPssProtocolHead *)recvDataBuf.bytes;
-        if (head->head[0] != HEADER_0 ||
-            head->head[1] != HEADER_1 ||
-            head->head[2] != HEADER_2 ||
-            head->head[3] != HEADER_3 ) {
-            //脏数据
-            [recvDataBuf setLength:0];
-        }
-        
-        int msgLen = ntohl(head->bodyLength);
-        if (msgLen < 0 || msgLen > 10*1024*1024) {
-            //脏数据
-            [recvDataBuf setLength:0];
-        }
-        
-        int packLen = msgLen + sizeof(stPssProtocolHead);
-        if (recvDataBuf.length < packLen) {
-            //数据包不完整
-            break;
-        }
-        
-        char *pBuf = (char *)[recvDataBuf bytes];
-        NSData *pack = [[NSData alloc] initWithBytes:pBuf length:packLen];
-        if (pack == nil) {
-            break;
-        }
-        NSInteger lastLen = recvDataBuf.length-packLen;
-        if (lastLen > 0) {
-            memmove(pBuf, pBuf+packLen, lastLen);
-        }else{
-            [recvDataBuf setLength:0];
-        }
-        
-        head = (stPssProtocolHead *)pack.bytes;
-        head->bodyLength = msgLen;
-        head->msgId = ntohl(head->msgId);
-        head->uid = client.uid;
-        
-        pssHSMmsg *msg = [[pssHSMmsg alloc] initWithData:pack uid:head->uid msgId:head->msgId block:nil];
-        [client.mArrRecvPack addObject:msg];
-    } while (recvDataBuf.length > 0);
+    [client sortPack];
 
     WeakSelf(weakSelf);
     while (client.mArrRecvPack.count > 0) {

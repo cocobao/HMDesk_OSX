@@ -51,7 +51,7 @@
     [_showInFinder_selectFile setAction:@selector(showInFinder:)];
     
     _ipLabel.stringValue = [picNetComMethod localIPAdress];
-    
+    _selectFilePath.stringValue = @"/Users/admin/Downloads/072935_6001.MP4";
     [picLink addTcpDelegate:self];
 //    [self readRootPath];
     _rootPath.editable = NO;

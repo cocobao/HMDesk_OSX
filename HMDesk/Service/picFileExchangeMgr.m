@@ -129,7 +129,7 @@ __strong static id sharedInstance = nil;
 
 - (void)NetRecvFileUid:(NSInteger)uid fileId:(unsigned long long)fileId Data:(NSData *)data
 {
-    NSLog(@"recv data:%zd", data.length);
+//    NSLog(@"recv data:%zd", data.length);
     
     NSString *key = [NSString stringWithFormat:@"%zd_%zd", uid, fileId];
     if (_dictRecvers[key]) {
