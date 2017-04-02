@@ -169,6 +169,15 @@ __strong static id sharedInstance = nil;
     client.uid = [pssHSMmsg getRandomMessageID];//分配一个uid
     [_arrClientSockets addObject:client];
 
+    for (int i = 0; i < (int)_arrClientSockets.count-1; i++) {
+        picClient *postClient = _arrClientSockets[i];
+        if ([postClient.addrString isEqualToString:addrString] &&
+            postClient.port == port) {
+            [_arrClientSockets removeObjectAtIndex:i];
+            break;
+        }
+    }
+    
     return _mSocketQueue;
 }
 
@@ -177,10 +186,11 @@ __strong static id sharedInstance = nil;
 {
     for (int i = (int)_arrClientSockets.count-1; i>=0; i--) {
         picClient *client = _arrClientSockets[i];
+        [_arrClientSockets removeObjectAtIndex:i];
+        
         if (client.mSocket.socketFD <= 0) {
             [client.mSocket disconnect];
-            [_arrClientSockets removeObjectAtIndex:i];
-            
+
             NSLog(@"did disconnect, ClientSocket count:%zd", _arrClientSockets.count);
             
             NSNotificationCenter *nofity = [NSNotificationCenter defaultCenter];

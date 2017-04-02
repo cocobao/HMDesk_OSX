@@ -32,7 +32,7 @@
 
 -(void)sendMvData:(NSData *)data toHost:(NSString *)host;
 -(void)sendAuData:(NSData *)data toHost:(NSString *)host;
--(void)sendFileData:(NSData *)data uid:(int)uid;
+-(void)sendFileData:(NSData *)data uid:(int)uid msgId:(NSInteger)msgId;
 
 -(void)addTcpDelegate:(id)obj;
 -(void)removeTcpDelegate:(id)obj;

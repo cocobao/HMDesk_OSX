@@ -165,6 +165,22 @@ __strong static id sharedInstance = nil;
                      fileId:fileId
                    fileSize:fileSize];
         [picLink NetApi_ApplyRecvFileAckWithUid:head->uid msgId:head->msgId fileId:fileId];
+    }else if (head->type == emPssProtocolType_ApplySendFile) {
+        NSInteger code = [receData.body[ptl_status] integerValue];
+        if (code != 200) {
+            return;
+        }
+        NSString *filePath = receData.body[ptl_filePath];
+        NSInteger fileId = [receData.body[ptl_fileId] integerValue];
+        [FileExcgMgr addSendingUid:head->uid filePath:filePath fileId:fileId];
+    }else if(head->type == emPssProtocolType_FilePart){
+        //获取文件部分
+        NSString *filePath = receData.body[ptl_filePath];
+        NSInteger fileId = [receData.body[ptl_fileId] integerValue];
+        NSInteger seek = [receData.body[ptl_seek] integerValue];
+        
+        NSData *partData = [picFileSender readFilePartWithPath:filePath apFileId:fileId seek:seek];
+        [picLink sendFileData:partData uid:head->uid msgId:head->msgId];
     }
 }
 @end

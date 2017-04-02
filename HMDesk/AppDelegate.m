@@ -174,24 +174,4 @@
         }
     }];
 }
-
-- (void)NetTcpCallback:(pssHSMmsg *)receData error:(NSError *)error
-{
-    if (error) {
-        NSLog(@"net call error:%@", error);
-        return;
-    }
-    
-    stPssProtocolHead *head = (stPssProtocolHead *)receData.sendData.bytes;
-    
-    if (head->type == emPssProtocolType_ApplySendFile) {
-        NSInteger code = [receData.body[ptl_status] integerValue];
-        if (code != 200) {
-            return;
-        }
-        NSString *filePath = receData.body[ptl_filePath];
-        NSInteger fileId = [receData.body[ptl_fileId] integerValue];
-        [FileExcgMgr addSendingUid:head->uid filePath:filePath fileId:fileId];
-    }
-}
 @end

@@ -111,7 +111,7 @@ __strong static id sharedInstance = nil;
     protoHead->bodyLength = htonl((int)data.length - sizeof(stPssProtocolHead));
 }
 
--(pssHSMmsg *)setProtocolHead:(NSData *)data type:(NSInteger)type uid:(int)uid
+-(pssHSMmsg *)setProtocolHead:(NSData *)data type:(NSInteger)type uid:(int)uid msgId:(NSInteger)msgId
 {
     stPssProtocolHead *protoHead = (stPssProtocolHead *)data.bytes;
     protoHead->head[0] = HEADER_0;
@@ -119,7 +119,7 @@ __strong static id sharedInstance = nil;
     protoHead->head[2] = HEADER_2;
     protoHead->head[3] = HEADER_3;
     protoHead->version = PRO_VERSION;
-    protoHead->msgId = 0;
+    protoHead->msgId = (int)msgId;
     protoHead->type = type;
     protoHead->uid = uid;
     protoHead->bodyLength = htonl((int)data.length - sizeof(stPssProtocolHead));
@@ -221,9 +221,9 @@ __strong static id sharedInstance = nil;
 }
 
 //发送文件数据
--(void)sendFileData:(NSData *)data uid:(int)uid
+-(void)sendFileData:(NSData *)data uid:(int)uid msgId:(NSInteger)msgId
 {
-    pssHSMmsg *newpack = [self setProtocolHead:data type:emPssProtocolType_SendFile uid:uid];
+    pssHSMmsg *newpack = [self setProtocolHead:data type:emPssProtocolType_SendFile uid:uid msgId:msgId];
     [_tcp_link sendPack:newpack];
 }
 

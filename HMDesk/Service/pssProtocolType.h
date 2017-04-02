@@ -28,6 +28,7 @@ typedef enum {
     emPssProtocolType_ApplySendFile,
     emPssProtocolType_SendFile,
     emPssProtocolType_ApplyRecvFile,
+    emPssProtocolType_FilePart,
     emPssProtocolType_RecvFile,
     emPssProtocolType_VideoData,
     emPssProtocolType_AudioData,

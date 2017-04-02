@@ -21,4 +21,6 @@
                   filePath:(NSString *)filePath
                     fileId:(NSInteger)fileId;
 -(void)cancel;
+
++(NSData *)readFilePartWithPath:(NSString *)filePath apFileId:(NSInteger)apFileId seek:(NSInteger)seek;
 @end

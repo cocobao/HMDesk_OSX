@@ -9,7 +9,7 @@
 #import "picFileSender.h"
 #import "picLinkObj.h"
 
-static const NSInteger MaxReadSize = (1024*512);
+static const NSInteger MaxReadSize = (1024*256);
 
 @interface picFileSender ()
 @property (nonatomic, copy) NSString *filePath;
@@ -60,16 +60,16 @@ static const NSInteger MaxReadSize = (1024*512);
         }
         
         [fileHandle seekToFileOffset:offset];
-        NSData *data = [self readFileHandle:fileHandle offset:offset fileSize:fileSize];
+        NSData *data = [picFileSender readFileHandle:fileHandle offset:offset fileSize:fileSize];
         if (!data) {
             NSLog(@"finish");
             break;
         }
         offset += data.length;
-        NSData *reData = [self resetForSendData:data fid:fileSender.mFileId];
-        [picLink sendFileData:reData uid:(uint32_t)fileSender.mUid];
+        NSData *reData = [picFileSender resetForSendData:data fid:fileSender.mFileId];
+        [picLink sendFileData:reData uid:(uint32_t)fileSender.mUid msgId:0];
 //        NSLog(@"send data size:%zd", reData.length);
-        usleep(80000);
+        usleep(100000);
     }
     
     [fileHandle closeFile];
@@ -79,7 +79,7 @@ static const NSInteger MaxReadSize = (1024*512);
     }
 }
 
--(NSData *)readFileHandle:(NSFileHandle *)handle offset:(NSInteger)offSet fileSize:(NSInteger)fileSize
++(NSData *)readFileHandle:(NSFileHandle *)handle offset:(NSInteger)offSet fileSize:(NSInteger)fileSize
 {
     NSInteger readSize = 0;
     if (fileSize - offSet > MaxReadSize) {
@@ -95,7 +95,7 @@ static const NSInteger MaxReadSize = (1024*512);
     return [handle readDataOfLength:readSize];
 }
 
--(NSData *)resetForSendData:(NSData *)pSrc fid:(unsigned long long)fid
++(NSData *)resetForSendData:(NSData *)pSrc fid:(unsigned long long)fid
 {
     int sizeSpace = sizeof(unsigned long long);
     int headerSize = sizeof(stPssProtocolHead);
@@ -105,5 +105,22 @@ static const NSInteger MaxReadSize = (1024*512);
     memcpy(pDes+headerSize, &fid, sizeof(fid));
     memcpy(pDes+headerSize+sizeSpace, [pSrc bytes], pSrc.length);
     return muData;
+}
+
++(NSData *)readFilePartWithPath:(NSString *)filePath apFileId:(NSInteger)apFileId seek:(NSInteger)seek
+{
+    NSDictionary *info = [UPan_FileMng fileAttriutes:filePath];
+    NSInteger fileSize = [info[NSFileSize] integerValue];
+    if (fileSize < seek) {
+        return nil;
+    }
+    
+    NSFileHandle *fileHandle = [NSFileHandle fileHandleForReadingAtPath:filePath];
+    [fileHandle seekToFileOffset:seek];
+    NSData *data = [picFileSender readFileHandle:fileHandle offset:seek fileSize:fileSize];
+    [fileHandle closeFile];
+    
+    NSData *reData = [picFileSender resetForSendData:data fid:apFileId];
+    return reData;
 }
 @end
