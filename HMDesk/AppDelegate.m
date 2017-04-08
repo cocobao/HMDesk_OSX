@@ -51,12 +51,12 @@
     [_showInFinder_selectFile setAction:@selector(showInFinder:)];
     
     _ipLabel.stringValue = [picNetComMethod localIPAdress];
-    _selectFilePath.stringValue = @"/Users/admin/Downloads/072935_6001.MP4";
+//    _selectFilePath.stringValue = @"/Users/admin/Downloads/072935_6001.MP4";
     [picLink addTcpDelegate:self];
 //    [self readRootPath];
     _rootPath.editable = NO;
     _rootPath.backgroundColor = Color_black(10);
-    NSString *path = @"/Users/admin/Downloads";
+    NSString *path = [NSString stringWithFormat:@"/Users/%@/Downloads", NSUserName()];
     [_rootPath setStringValue:path];
     [FileExcgMgr setMNowPath:path];
 }
