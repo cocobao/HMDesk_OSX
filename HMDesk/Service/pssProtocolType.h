@@ -32,6 +32,7 @@ typedef enum {
     emPssProtocolType_RecvFile,
     emPssProtocolType_VideoData,
     emPssProtocolType_AudioData,
+    emPssProtocolType_HeartBeat,
 }emPssProtocolType;
 
 #pragma pack(1)

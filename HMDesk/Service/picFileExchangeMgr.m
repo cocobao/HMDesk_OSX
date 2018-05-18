@@ -129,8 +129,6 @@ __strong static id sharedInstance = nil;
 
 - (void)NetRecvFileUid:(NSInteger)uid fileId:(unsigned long long)fileId Data:(NSData *)data
 {
-//    NSLog(@"recv data:%zd", data.length);
-    
     NSString *key = [NSString stringWithFormat:@"%zd_%zd", uid, fileId];
     if (_dictRecvers[key]) {
         picFileRecver *fr = _dictRecvers[key];
@@ -147,6 +145,7 @@ __strong static id sharedInstance = nil;
     
     stPssProtocolHead *head = (stPssProtocolHead *)receData.sendData.bytes;
     
+    //请求文件发送
     if (head->type == emPssProtocolType_ApplyRecvFile){
         if (!_mNowPath) {
             return;
@@ -165,6 +164,8 @@ __strong static id sharedInstance = nil;
                      fileId:fileId
                    fileSize:fileSize];
         [picLink NetApi_ApplyRecvFileAckWithUid:head->uid msgId:head->msgId fileId:fileId];
+        
+    //请求接收文件
     }else if (head->type == emPssProtocolType_ApplySendFile) {
         NSInteger code = [receData.body[ptl_status] integerValue];
         if (code != 200) {
@@ -173,6 +174,8 @@ __strong static id sharedInstance = nil;
         NSString *filePath = receData.body[ptl_filePath];
         NSInteger fileId = [receData.body[ptl_fileId] integerValue];
         [FileExcgMgr addSendingUid:head->uid filePath:filePath fileId:fileId];
+        
+    //请求文件部分开始
     }else if(head->type == emPssProtocolType_FilePart){
         //获取文件部分
         NSString *filePath = receData.body[ptl_filePath];
@@ -182,5 +185,10 @@ __strong static id sharedInstance = nil;
         NSData *partData = [picFileSender readFilePartWithPath:filePath apFileId:fileId seek:seek];
         [picLink sendFileData:partData uid:head->uid msgId:head->msgId];
     }
+}
+
+-(void)runSendingFileThread
+{
+    
 }
 @end

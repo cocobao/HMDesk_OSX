@@ -293,6 +293,8 @@ __strong static id sharedInstance = nil;
             memcpy(&fileId, body, sizeSpace);
             [_multicastDelegate NetRecvFileUid:client.uid fileId:fileId Data:fileData];
             return;
+        }else if (head->type == emPssProtocolType_HeartBeat){
+            return;
         }
     }
 

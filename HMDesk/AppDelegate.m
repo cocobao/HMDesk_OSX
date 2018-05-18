@@ -12,8 +12,8 @@
 
 @interface AppDelegate ()
 @property (weak) IBOutlet NSWindow *window;
-@property (nonatomic, weak) IBOutlet NSButton *broadcastBtn;
-@property (nonatomic, weak) IBOutlet NSTextField *ipLabel;
+//@property (nonatomic, weak) IBOutlet NSButton *broadcastBtn;
+//@property (nonatomic, weak) IBOutlet NSTextField *ipLabel;
 //@property (nonatomic, weak) IBOutlet NSButton *rootPathBtn;
 @property (nonatomic, weak) IBOutlet NSTextField *rootPath;
 //@property (nonatomic, weak) IBOutlet NSButton *saveRootPathBtn;
@@ -27,8 +27,8 @@
 @implementation AppDelegate
 
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification {
-    [_broadcastBtn setTarget:self];
-    [_broadcastBtn setAction:@selector(broadcastAction:)];
+//    [_broadcastBtn setTarget:self];
+//    [_broadcastBtn setAction:@selector(broadcastAction:)];
     
 //    [_rootPathBtn setTarget:self];
 //    [_rootPathBtn setAction:@selector(setRootPathAction:)];
@@ -50,13 +50,15 @@
     [_showInFinder_selectFile setTarget:self];
     [_showInFinder_selectFile setAction:@selector(showInFinder:)];
     
-    _ipLabel.stringValue = [picNetComMethod localIPAdress];
+//    _ipLabel.stringValue = [picNetComMethod localIPAdress];
 //    _selectFilePath.stringValue = @"/Users/admin/Downloads/072935_6001.MP4";
     [picLink addTcpDelegate:self];
 //    [self readRootPath];
     _rootPath.editable = NO;
     _rootPath.backgroundColor = Color_black(10);
-    NSString *path = [NSString stringWithFormat:@"/Users/%@/Downloads", NSUserName()];
+    
+    NSString *p = [NSSearchPathForDirectoriesInDomains(NSDownloadsDirectory, NSUserDomainMask, YES) firstObject];
+    NSString *path = [NSString stringWithFormat:@"%@", p];
     [_rootPath setStringValue:path];
     [FileExcgMgr setMNowPath:path];
 }
