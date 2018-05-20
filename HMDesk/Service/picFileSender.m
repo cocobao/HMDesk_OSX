@@ -69,7 +69,7 @@ static const NSInteger MaxReadSize = (1024*256);
         NSData *reData = [picFileSender resetForSendData:data fid:fileSender.mFileId];
         [picLink sendFileData:reData uid:(uint32_t)fileSender.mUid msgId:0];
 //        NSLog(@"send data size:%zd", reData.length);
-        usleep(100000);
+        usleep(10000);
     }
     
     [fileHandle closeFile];

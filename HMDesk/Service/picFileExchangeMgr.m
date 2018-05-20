@@ -58,21 +58,29 @@ __strong static id sharedInstance = nil;
     return self;
 }
 
+//客户端连接已关闭
 -(void)clientDisconnect:(NSNotification *)notify
 {
     NSDictionary *dict = notify.object;
     NSInteger uid = [dict[ptl_uid] integerValue];
+    
+    //关闭该客户端的所有文件发送对象
     NSArray *arrAllKeys = [self.dictSenders allKeys];
     for (NSString *key in arrAllKeys) {
         picFileSender *fs = self.dictSenders[key];
         if (fs.mUid == uid) {
+            
+            //关闭文件发送线程
             [fs cancel];
+            
+            //从队列中移除
             [self.dictSenders removeObjectForKey:key];
             break;
         }
     }
 }
 
+//创建文件副本
 -(NSDictionary *)createFile:(NSString *)fileName
 {
     NSArray *arrSrcFile = [UPan_FileMng ContentOfPath:_mNowPath];
@@ -90,6 +98,7 @@ __strong static id sharedInstance = nil;
     return dict;
 }
 
+//增加发送对象
 -(void)addSendingUid:(NSInteger)uid filePath:(NSString *)filePath fileId:(NSInteger)fileId
 {
     picFileSender *fs = [[picFileSender alloc] initWithUid:uid filePath:filePath fileId:fileId];
@@ -101,6 +110,7 @@ __strong static id sharedInstance = nil;
     NSLog(@"add file sending:%@", filePath);
 }
 
+//增加接收对象
 -(void)addRecvingUid:(NSInteger)uid filePath:(NSString *)filePath fileId:(NSInteger)fileId fileSize:(unsigned long long)fileSize
 {
     picFileRecver *fr = [[picFileRecver alloc] initWithUid:uid FileId:fileId filePath:filePath fileSize:fileSize];
@@ -109,6 +119,7 @@ __strong static id sharedInstance = nil;
     _dictRecvers[key] = fr;
 }
 
+//发送完毕
 -(void)didSendFinish:(NSString *)threadName
 {
     if (self.dictSenders[threadName]) {
@@ -145,7 +156,7 @@ __strong static id sharedInstance = nil;
     
     stPssProtocolHead *head = (stPssProtocolHead *)receData.sendData.bytes;
     
-    //请求文件发送
+    //请求发送文件到本地
     if (head->type == emPssProtocolType_ApplyRecvFile){
         if (!_mNowPath) {
             return;
@@ -165,7 +176,7 @@ __strong static id sharedInstance = nil;
                    fileSize:fileSize];
         [picLink NetApi_ApplyRecvFileAckWithUid:head->uid msgId:head->msgId fileId:fileId];
         
-    //请求接收文件
+    //请求发送文件
     }else if (head->type == emPssProtocolType_ApplySendFile) {
         NSInteger code = [receData.body[ptl_status] integerValue];
         if (code != 200) {
@@ -187,7 +198,7 @@ __strong static id sharedInstance = nil;
     }
 }
 
--(void)runSendingFileThread
+-(void)runSendingFileThread:(id)obj
 {
     
 }
