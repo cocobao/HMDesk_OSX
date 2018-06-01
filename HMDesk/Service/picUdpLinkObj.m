@@ -19,6 +19,8 @@
 {
     int mUdpSocket;
     BOOL isRun;
+    
+    
 }
 @property (nonatomic, strong) dispatch_queue_t mSocketQueue;
 @property (nonatomic, strong) NSThread *mThread;
@@ -91,7 +93,7 @@
 -(void)broadcastMyIp:(pssHSMmsg *)data
 {
     [self sendData:data.sendData toHost:BROUADCAST_IP];
-    NSLog(@"broadcast ip:%@:%d", BROUADCAST_IP,BROUADCAST_PORT);
+    MITLog(@"broadcast ip:%@:%d", BROUADCAST_IP,BROUADCAST_PORT);
 }
 
 -(void)sendData:(NSData *)data toHost:(NSString *)host
@@ -103,8 +105,33 @@
     
     ssize_t ret = sendto(mUdpSocket, data.bytes, data.length, 0, (struct sockaddr *)&addr, sizeof(struct sockaddr));
     if (ret < 0) {
-        NSLog(@"send size:%zd, length:%zd, %s", ret, data.length, strerror(errno));
+        MITLog(@"send size:%zd, length:%zd, %s", ret, data.length, strerror(errno));
     }
+}
+
+-(void)sendPackData:(NSData *)data toHost:(NSString *)host
+{
+    struct sockaddr_in addr;
+    addr.sin_family = AF_INET;
+    addr.sin_port = htons(BROUADCAST_PORT);
+    addr.sin_addr.s_addr = inet_addr([host UTF8String]);
+    
+    int nowSend = 0;
+    int hasSend = 0;
+    char *sendData = (char *) data.bytes;
+    do {
+        if (data.length - hasSend > 40960) {
+            nowSend = 40960;
+        }
+        ssize_t ret = sendto(mUdpSocket, sendData+hasSend, nowSend, 0, (struct sockaddr *)&addr, sizeof(struct sockaddr));
+        if (ret < 0) {
+            MITLog(@"send fail size:%zd, length:%zd, %s", ret, data.length, strerror(errno));
+            return;
+        }
+        hasSend += ret;
+    } while (hasSend < data.length);
+    
+    MITLog(@"send to host:%@, length:%lu", host, data.length)
 }
 
 -(void)sendData:(uint8_t *)data length:(NSInteger)length toHost:(NSString *)host
@@ -116,7 +143,7 @@
     
     ssize_t ret = sendto(mUdpSocket, data, length, 0, (struct sockaddr *)&addr, sizeof(struct sockaddr));
     if (ret < 0) {
-        NSLog(@"send size:%zd, length:%zd, %s", ret, length, strerror(errno));
+        MITLog(@"send size:%zd, length:%zd, %s", ret, length, strerror(errno));
     }
 }
 

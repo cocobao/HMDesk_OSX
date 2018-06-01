@@ -42,6 +42,7 @@
 -(NSString *)getIpWithUid:(uint32_t)uid;
 - (void)addDelegate:(id)delegate;
 - (void)removeDelegate:(id)delegate;
+-(picClient *)getClient:(uint)uid;
 @end
 
 

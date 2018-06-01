@@ -125,9 +125,9 @@ __strong static id sharedInstance = nil;
     NSError *error;
     BOOL ret = [_gcdSocket acceptOnPort:port error:&error];
     if (!ret) {
-        NSLog(@"%@", error);
+        MITLog(@"%@", error);
     }
-    NSLog(@"accept on local %@:%d", [picNetComMethod localIPAdress], port);
+    MITLog(@"accept on local %@:%d", [picNetComMethod localIPAdress], port);
 }
 
 //根据用户ID查找对应的IP
@@ -160,7 +160,7 @@ __strong static id sharedInstance = nil;
 {
     NSString *addrString = [GCDAsyncSocket hostFromAddress:address];
     uint16_t port = [GCDAsyncSocket portFromAddress:address];
-    NSLog(@"connect from addr:%@:%d", addrString, port);
+    MITLog(@"connect from addr:%@:%d", addrString, port);
 
     //分配一个客户端对象
     picClient *client = [[picClient alloc] init];
@@ -191,7 +191,7 @@ __strong static id sharedInstance = nil;
         if (client.mSocket.socketFD <= 0) {
             [client.mSocket disconnect];
 
-            NSLog(@"did disconnect, ClientSocket count:%zd", _arrClientSockets.count);
+            MITLog(@"did disconnect, ClientSocket count:%zd", _arrClientSockets.count);
             
             NSNotificationCenter *nofity = [NSNotificationCenter defaultCenter];
             [nofity postNotificationName:kNotificationClientDisconnect object:@{ptl_uid:@(client.uid)}];
@@ -254,6 +254,17 @@ __strong static id sharedInstance = nil;
     }
     
     [client.mSocket writeData:pack.sendData withTimeout:10 tag:0];
+}
+
+-(picClient *)getClient:(uint)uid
+{
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"SELF.uid = %d", uid];
+    NSArray *arr = [_arrClientSockets filteredArrayUsingPredicate:predicate];
+    picClient *client = nil;
+    if (arr.count > 0) {
+        client = [arr firstObject];
+    }
+    return client;
 }
 
 //处理接收数据分包

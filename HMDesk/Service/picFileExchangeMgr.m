@@ -107,7 +107,7 @@ __strong static id sharedInstance = nil;
     }
     self.dictSenders[fs.threadName] = fs;
     fs.m_delegate = self;
-    NSLog(@"add file sending:%@", filePath);
+    MITLog(@"add file sending:%@", filePath);
 }
 
 //增加接收对象
@@ -135,7 +135,7 @@ __strong static id sharedInstance = nil;
     if (_dictRecvers[key]) {
         [_dictRecvers removeObjectForKey:key];
     }
-    NSLog(@"recv file %zd finish", fileId);
+    MITLog(@"recv file %zd finish", fileId);
 }
 
 - (void)NetRecvFileUid:(NSInteger)uid fileId:(unsigned long long)fileId Data:(NSData *)data
@@ -150,7 +150,7 @@ __strong static id sharedInstance = nil;
 - (void)NetTcpCallback:(pssHSMmsg *)receData error:(NSError *)error
 {
     if (error) {
-        NSLog(@"net call error:%@", error);
+        MITLog(@"net call error:%@", error);
         return;
     }
     
@@ -166,7 +166,7 @@ __strong static id sharedInstance = nil;
         NSDictionary *dict = [self createFile:fileName];
         NSInteger fileId = [dict[NSFileSystemFileNumber] integerValue];
         if (fileId <= 0) {
-            NSLog(@"创建文件失败");
+            MITLog(@"创建文件失败");
             [picLink NetApi_FailAckWithUid:head->uid msgId:head->msgId type:head->type errCode:401 msg:@"创建文件失败"];
             return;
         }

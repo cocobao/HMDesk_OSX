@@ -1371,7 +1371,7 @@ static void MyCFWriteStreamCallback(CFWriteStreamRef stream, CFStreamEventType t
 		err = CFSocketSetAddress(theSocket4, (__bridge CFDataRef)address4);
 		if (err != kCFSocketSuccess) goto Failed;
 		
-		//NSLog(@"theSocket4: %hu", [self localPortFromCFSocket4:theSocket4]);
+		//MITLog(@"theSocket4: %hu", [self localPortFromCFSocket4:theSocket4]);
 	}
 	
 	if(port == 0 && theSocket4 && theSocket6)
@@ -1393,7 +1393,7 @@ static void MyCFWriteStreamCallback(CFWriteStreamRef stream, CFStreamEventType t
 		err = CFSocketSetAddress(theSocket6, (__bridge CFDataRef)address6);
 		if (err != kCFSocketSuccess) goto Failed;
 		
-		//NSLog(@"theSocket6: %hu", [self localPortFromCFSocket6:theSocket6]);
+		//MITLog(@"theSocket6: %hu", [self localPortFromCFSocket6:theSocket6]);
 	}
 
 	theFlags |= kDidStartDelegate;
@@ -1870,7 +1870,7 @@ Failed:
 	{
 		NSError *err = [self getStreamError];
 		
-		NSLog(@"AsyncSocket %p couldn't create streams from accepted socket: %@", self, err);
+		MITLog(@"AsyncSocket %p couldn't create streams from accepted socket: %@", self, err);
 		
 		if (errPtr) *errPtr = err;
 		return NO;
@@ -1923,8 +1923,8 @@ Failed:
 	{
 		NSError *err = [self getStreamError];
 		
-		NSLog(@"AsyncSocket %p couldn't attach read stream to run-loop,", self);
-		NSLog(@"Error: %@", err);
+		MITLog(@"AsyncSocket %p couldn't attach read stream to run-loop,", self);
+		MITLog(@"Error: %@", err);
 		
 		if (errPtr) *errPtr = err;
 		return NO;
@@ -1944,8 +1944,8 @@ Failed:
 	{
 		NSError *err = [self getStreamError];
 		
-		NSLog(@"AsyncSocket %p couldn't attach write stream to run-loop,", self);
-		NSLog(@"Error: %@", err);
+		MITLog(@"AsyncSocket %p couldn't attach write stream to run-loop,", self);
+		MITLog(@"Error: %@", err);
 		
 		if (errPtr) *errPtr = err;
 		return NO;
@@ -1988,13 +1988,13 @@ Failed:
 	
 	if(pass && !CFReadStreamOpen(theReadStream))
 	{
-		NSLog (@"AsyncSocket %p couldn't open read stream,", self);
+		MITLog (@"AsyncSocket %p couldn't open read stream,", self);
 		pass = NO;
 	}
 	
 	if(pass && !CFWriteStreamOpen(theWriteStream))
 	{
-		NSLog (@"AsyncSocket %p couldn't open write stream,", self);
+		MITLog (@"AsyncSocket %p couldn't open write stream,", self);
 		pass = NO;
 	}
 	
@@ -2019,7 +2019,7 @@ Failed:
 		// Get the socket
 		if (![self setSocketFromStreamsAndReturnError: &err])
 		{
-			NSLog (@"AsyncSocket %p couldn't get socket from streams, %@. Disconnecting.", self, err);
+			MITLog (@"AsyncSocket %p couldn't get socket from streams, %@. Disconnecting.", self, err);
 			[self closeWithError:err];
 			return;
 		}
@@ -2083,7 +2083,7 @@ Failed:
 	CFDataRef peeraddr = CFSocketCopyPeerAddress(theSocket);
 	if(peeraddr == NULL)
 	{
-		NSLog(@"AsyncSocket couldn't determine IP version of socket");
+		MITLog(@"AsyncSocket couldn't determine IP version of socket");
 		
 		CFRelease(theSocket);
 		
@@ -4171,7 +4171,7 @@ Failed:
 			[self doAcceptFromSocket:sock withNewNativeSocket:*((CFSocketNativeHandle *)pData)];
 			break;
 		default:
-			NSLog(@"AsyncSocket %p received unexpected CFSocketCallBackType %i", self, (int)type);
+			MITLog(@"AsyncSocket %p received unexpected CFSocketCallBackType %i", self, (int)type);
 			break;
 	}
 }
@@ -4204,7 +4204,7 @@ Failed:
 			[self closeWithError: [self errorFromCFStreamError:err]];
 			break;
 		default:
-			NSLog(@"AsyncSocket %p received unexpected CFReadStream callback, CFStreamEventType %i", self, (int)type);
+			MITLog(@"AsyncSocket %p received unexpected CFReadStream callback, CFStreamEventType %i", self, (int)type);
 	}
 }
 
@@ -4236,7 +4236,7 @@ Failed:
 			[self closeWithError: [self errorFromCFStreamError:err]];
 			break;
 		default:
-			NSLog(@"AsyncSocket %p received unexpected CFWriteStream callback, CFStreamEventType %i", self, (int)type);
+			MITLog(@"AsyncSocket %p received unexpected CFWriteStream callback, CFStreamEventType %i", self, (int)type);
 	}
 }
 

@@ -24,4 +24,5 @@
 -(void)broadcastMyIp:(pssHSMmsg *)data;
 -(void)sendData:(NSData *)data toHost:(NSString *)host;
 -(void)sendData:(uint8_t *)data length:(NSInteger)length toHost:(NSString *)host;
+-(void)sendPackData:(NSData *)data toHost:(NSString *)host;
 @end

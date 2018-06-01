@@ -9,7 +9,7 @@
 #import "picFileSender.h"
 #import "picLinkObj.h"
 
-static const NSInteger MaxReadSize = (1024*256);
+static const NSInteger MaxReadSize = (1024*40);
 
 @interface picFileSender ()
 @property (nonatomic, copy) NSString *filePath;
@@ -55,20 +55,20 @@ static const NSInteger MaxReadSize = (1024*256);
 
     for(;;){
         if (currentThread.isCancelled) {
-            NSLog(@"thread is cannel");
+            MITLog(@"thread is cannel");
             break;
         }
         
         [fileHandle seekToFileOffset:offset];
         NSData *data = [picFileSender readFileHandle:fileHandle offset:offset fileSize:fileSize];
         if (!data) {
-            NSLog(@"finish");
+            MITLog(@"finish");
             break;
         }
         offset += data.length;
         NSData *reData = [picFileSender resetForSendData:data fid:fileSender.mFileId];
         [picLink sendFileData:reData uid:(uint32_t)fileSender.mUid msgId:0];
-//        NSLog(@"send data size:%zd", reData.length);
+//        MITLog(@"send data size:%zd", reData.length);
         usleep(10000);
     }
     

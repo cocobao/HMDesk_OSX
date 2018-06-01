@@ -64,10 +64,10 @@
     }
     BOOL res=[[NSFileManager defaultManager] createDirectoryAtPath:path withIntermediateDirectories:YES attributes:nil error:nil];
     if (res) {
-        NSLog(@"文件夹创建成功");
+        MITLog(@"文件夹创建成功");
         return YES;
     }else
-        NSLog(@"文件夹创建失败");
+        MITLog(@"文件夹创建失败");
     return NO;
 }
 

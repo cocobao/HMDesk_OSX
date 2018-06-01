@@ -9,6 +9,8 @@
 #ifndef PrefixHeader_pch
 #define PrefixHeader_pch
 
+#ifdef __OBJC__
+
 #define WeakSelf(weakSelf)  __weak __typeof(&*self)weakSelf = self
 #define StrongSelf(strongSelf, s) __strong __typeof(&*s) strongSelf = s
 
@@ -16,5 +18,10 @@
 #import "utility.h"
 #import "picNetComMethod.h"
 #import "UPan_FileMng.h"
+
+
+#define MITLog(format, ...) printf("\n[%s] %s [%d] %s\n", __TIME__, __FUNCTION__, __LINE__, [[NSString stringWithFormat:format, ## __VA_ARGS__] UTF8String]);
+
+#endif
 
 #endif /* PrefixHeader_pch */

@@ -145,7 +145,7 @@ __strong static id sharedInstance = nil;
 //登陆ack
 -(void)NetApi_LoginServiceAck:(pssHSMmsg *)pack
 {
-    NSLog(@"client login, uid:%d", pack.uid);
+    MITLog(@"client login, uid:%d", pack.uid);
     stPssProtocolHead *head = (stPssProtocolHead *)pack.sendData.bytes;
     
     NSDictionary *dict = @{ptl_uid:@(head->uid)};
@@ -225,6 +225,10 @@ __strong static id sharedInstance = nil;
 {
     pssHSMmsg *newpack = [self setProtocolHead:data type:emPssProtocolType_SendFile uid:uid msgId:msgId];
     [_tcp_link sendPack:newpack];
+//    picClient *client = [_tcp_link getClient:uid];
+//    if (client != nil) {
+//        [_udp_link sendPackData:newpack.sendData toHost:client.addrString];
+//    }
 }
 
 //获取客户端ip

@@ -1750,7 +1750,7 @@ static void MyCFSocketCallback(CFSocketRef, CFSocketCallBackType, CFDataRef, con
 	
 	if(theNativeSocket == 0)
 	{
-		NSLog(@"Error - Could not get CFSocketNativeHandle from CFSocketRef");
+		MITLog(@"Error - Could not get CFSocketNativeHandle from CFSocketRef");
 		return NO;
 	} 
 	
@@ -1973,7 +1973,7 @@ static void MyCFSocketCallback(CFSocketRef, CFSocketCallBackType, CFDataRef, con
 	
 	if(theNativeSocket == 0)
 	{
-		NSLog(@"Error - Could not get CFSocketNativeHandle from CFSocketRef");
+		MITLog(@"Error - Could not get CFSocketNativeHandle from CFSocketRef");
 		return NO;
 	} 
 	
@@ -2290,7 +2290,7 @@ static void MyCFSocketCallback(CFSocketRef, CFSocketCallBackType, CFDataRef, con
 			[self doSend:sock];
 			break;
 		default:
-			NSLog (@"AsyncUdpSocket %p received unexpected CFSocketCallBackType %lu.", self, (unsigned long)type);
+			MITLog (@"AsyncUdpSocket %p received unexpected CFSocketCallBackType %lu.", self, (unsigned long)type);
 			break;
 	}
 }
