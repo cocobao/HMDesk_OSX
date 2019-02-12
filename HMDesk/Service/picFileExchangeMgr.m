@@ -178,14 +178,14 @@ __strong static id sharedInstance = nil;
         
     //请求发送文件
     }else if (head->type == emPssProtocolType_ApplySendFile) {
-        NSInteger code = [receData.body[ptl_status] integerValue];
-        if (code != 200) {
-            return;
-        }
-        NSString *filePath = receData.body[ptl_filePath];
-        NSInteger fileId = [receData.body[ptl_fileId] integerValue];
-        [FileExcgMgr addSendingUid:head->uid filePath:filePath fileId:fileId];
-        
+//        NSInteger code = [receData.body[ptl_status] integerValue];
+//        if (code != 200) {
+//            return;
+//        }
+//        NSString *filePath = receData.body[ptl_filePath];
+//        NSInteger fileId = [receData.body[ptl_fileId] integerValue];
+//        [FileExcgMgr addSendingUid:head->uid filePath:filePath fileId:fileId];
+//        
     //请求文件部分开始
     }else if(head->type == emPssProtocolType_FilePart){
         //获取文件部分

@@ -9,7 +9,7 @@
 #import "picFileSender.h"
 #import "picLinkObj.h"
 
-static const NSInteger MaxReadSize = (1024*40);
+static const NSInteger MaxReadSize = (1024*1024);
 
 @interface picFileSender ()
 @property (nonatomic, copy) NSString *filePath;

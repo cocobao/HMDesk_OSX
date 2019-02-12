@@ -13,7 +13,7 @@
 @interface AppDelegate ()
 @property (weak) IBOutlet NSWindow *window;
 //@property (nonatomic, weak) IBOutlet NSButton *broadcastBtn;
-//@property (nonatomic, weak) IBOutlet NSTextField *ipLabel;
+@property (nonatomic, weak) IBOutlet NSTextField *ipLabel;
 //@property (nonatomic, weak) IBOutlet NSButton *rootPathBtn;
 @property (nonatomic, weak) IBOutlet NSTextField *rootPath;
 //@property (nonatomic, weak) IBOutlet NSButton *saveRootPathBtn;
@@ -50,7 +50,7 @@
     [_showInFinder_selectFile setTarget:self];
     [_showInFinder_selectFile setAction:@selector(showInFinder:)];
     
-//    _ipLabel.stringValue = [picNetComMethod localIPAdress];
+    _ipLabel.stringValue = [NSString stringWithFormat:@"IP: %@", [picNetComMethod localIPAdress]];
 //    _selectFilePath.stringValue = @"/Users/admin/Downloads/072935_6001.MP4";
     [picLink addTcpDelegate:self];
 //    [self readRootPath];
