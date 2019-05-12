@@ -194,6 +194,10 @@ __strong static id sharedInstance = nil;
         NSInteger seek = [receData.body[ptl_seek] integerValue];
         
         NSData *partData = [picFileSender readFilePartWithPath:filePath apFileId:fileId seek:seek];
+        if (partData == nil) {
+            MITLog(@"read file part fail,file:%@, fileId:%ld, seek:%ld", filePath, fileId, seek);
+            return;
+        }
         [picLink sendFileData:partData uid:head->uid msgId:head->msgId];
     }
 }

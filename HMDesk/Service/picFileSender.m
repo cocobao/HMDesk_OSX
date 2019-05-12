@@ -69,7 +69,7 @@ static const NSInteger MaxReadSize = (1024*1024);
         NSData *reData = [picFileSender resetForSendData:data fid:fileSender.mFileId];
         [picLink sendFileData:reData uid:(uint32_t)fileSender.mUid msgId:0];
 //        MITLog(@"send data size:%zd", reData.length);
-        usleep(10000);
+        usleep(2000);
     }
     
     [fileHandle closeFile];
@@ -116,6 +116,9 @@ static const NSInteger MaxReadSize = (1024*1024);
     }
     
     NSFileHandle *fileHandle = [NSFileHandle fileHandleForReadingAtPath:filePath];
+    if (fileHandle == nil) {
+        return nil;
+    }
     [fileHandle seekToFileOffset:seek];
     NSData *data = [picFileSender readFileHandle:fileHandle offset:seek fileSize:fileSize];
     [fileHandle closeFile];
